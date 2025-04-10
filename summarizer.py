@@ -12,10 +12,9 @@ from heapq import nlargest
 stop_words = set(stopwords.words('english'))
 punctuations = set(string.punctuation)
 
-def summarize(text):
-    words = word_tokenize(text)
 
-    #Word frequency
+def create_word_frequency(text,context=None,bias=0):
+    words = word_tokenize(text)
     word_frequency={}
 
     for word in words:
@@ -25,14 +24,32 @@ def summarize(text):
             if word_count is None:
                 word_frequency[word]=1
             else:
-                word_frequency[word]=word_count+1
-            
-
+                 word_frequency[word]=word_count+1
+              
     most_frequent = max(word_frequency, key=word_frequency.get)
     max_frequency=word_frequency[most_frequent]
 
     for word,frequency in word_frequency.items():
-        word_frequency[word]= frequency/max_frequency
+        if context==None:
+            word_frequency[word]= frequency/max_frequency
+        else:
+            context_count=context.get(word)
+            if context_count is None:
+                word_frequency[word] = (frequency + (context_count * bias))/max_frequency
+
+    return word_frequency, max_frequency
+    
+
+def summarize(text,context=None,bias=0):
+    #Word frequency
+    word_frequency={}
+    if context==None and bias==0:
+        word_frequency, _=create_word_frequency(text)
+    else:
+        if bias==0:
+            word_frequency, _=create_word_frequency(text,context)
+        else:
+            word_frequency, _=create_word_frequency(text,context,bias)
 
     sentences=sent_tokenize(text)
 
@@ -50,7 +67,7 @@ def summarize(text):
         scored_sentences[sentence]=sentence_score
 
 
-    summarized_length=1
+    summarized_length=3
 
     summary=nlargest(summarized_length,scored_sentences,key=scored_sentences.get) #highest scoring sentences 
 
