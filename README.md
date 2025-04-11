@@ -36,3 +36,6 @@ TF-IDF: Text vectorization
 Dataset
 https://www.kaggle.com/datasets/mdepak/fakenewsnet
 A pre-provided dataset containing labeled real and fake news articles.
+
+
+kaggle.json has api keys and data sets is imported using python script
