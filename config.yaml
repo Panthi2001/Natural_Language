@@ -1,0 +1,46 @@
+# config.yaml
+# Configuration file for hyperparameters, dataset paths, and model settings.
+
+# Paths
+dataset:
+  fake_news_csv: "data/fakenewsnet.csv"      # Path to the downloaded FakeNewsNet CSV dataset
+  stopwords_file: "data/stopwords.txt"       # Path to a stopwords file (one word per line)
+
+output:
+  classifier_model_dir: "models/classifier/"   # Directory to save classifier models
+  summarizer_model_dir: "models/summarizer/"   # Directory to save the fine-tuned summarizer
+
+# Hyperparameters for preprocessing
+preprocessing:
+  max_vocab_size: 50000          # Maximum vocabulary size for TF-IDF vectorizer
+  min_df: 5                      # Minimum document frequency for TF-IDF
+  max_df: 0.85                   # Maximum document frequency for TF-IDF
+
+# Hyperparameters for classification models
+classification:
+  random_seed: 42
+  test_size: 0.2
+  svm:
+    kernel: "linear"
+    C: 1.0
+  naive_bayes:
+    alpha: 1.0
+  logistic_regression:
+    C: 1.0
+    max_iter: 1000
+
+# Hyperparameters for summarization (BERT/BART)
+summarization:
+  model_name: "facebook/bart-large-cnn"   # Base model for abstractive summarization
+  max_input_length: 1024                 # Maximum token length for input articles
+  max_summary_length: 150                # Maximum token length for generated summary
+  num_beams: 4                            # Beam search width
+  repetition_penalty: 2.0                # Penalty for repeated phrases
+  length_penalty: 1.0                     # Penalty to encourage longer or shorter summaries
+  early_stopping: True
+  device: "cuda"                          # "cuda" or "cpu"; change to "cpu" if GPU unavailable
+
+# Evaluation settings
+evaluation:
+  rouge_metrics: ["rouge1", "rouge2", "rougeL", "rougeLsum"]
+  f1_average: "weighted"                 # Averaging method for F1 (micro, macro, or weighted)
